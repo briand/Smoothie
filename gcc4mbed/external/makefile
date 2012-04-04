@@ -35,11 +35,11 @@ install: install_mbed install_fat patch_mbed patch_fat strip_libs
 
 install_mbed:
 	$(DELTREE) mbed $(QUIET)
-	$(SVN) checkout --revision 28  http://mbed.org/projects/libraries/svn/mbed/trunk mbed
+	$(SVN) export --revision 28  http://mbed.org/projects/libraries/svn/mbed/trunk mbed
 
 install_fat:
 	$(DELTREE) FATFileSystem $(QUIET)
-	$(SVN) checkout --revision 28  http://mbed.org/projects/libraries/svn/FATFileSystem/trunk FATFileSystem
+	$(SVN) export --revision 28  http://mbed.org/projects/libraries/svn/FATFileSystem/trunk FATFileSystem
 
 patch_mbed:
 	$(MOVE) mbed/LPC1768/LPC1768.sct  mbed/LPC1768/LPC1768.scatter
