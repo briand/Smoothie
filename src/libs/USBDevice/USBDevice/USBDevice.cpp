@@ -10,7 +10,6 @@
 #include "USBEndpoints.h"
 #include "USBDevice.h"
 #include "USBDescriptor.h"
-#include "USBHID_Types.h"
 
 
 /* Device status */
