@@ -235,7 +235,14 @@ uint8_t * USBCDCMSC::configurationDesc() {
 
         // IAD
 //        0x08, 0x0B, 0x00, 0x02, 0x02, 0x00, 0x00, 0x00,
-        0x08, 0x0B, 0x00, 0x02, 0x02, 0x02, 0x01, 0x00,
+        0x08, 					// bLength
+		0x0B, 					// bDescriptorType (IAD)
+		0x00, 					// bFirstInterface
+		0x02, 					// bTotalInterfaces
+		0x02, 					// bClass (CDC)
+		0x02, 					// bSubClass (ACM)
+		0x01, 					// bPrototol (AT)
+		0x00,					// iInterface
 
         // interface descriptor, USB spec 9.6.5, page 267-269, Table 9-12
         9,                      // bLength
@@ -281,9 +288,7 @@ uint8_t * USBCDCMSC::configurationDesc() {
         E_INTERRUPT,                    // bmAttributes (0x03=intr)
         LSB(MAX_PACKET_SIZE_EPINT),     // wMaxPacketSize (LSB)
         MSB(MAX_PACKET_SIZE_EPINT),     // wMaxPacketSize (MSB)
-        16,                             // bInterval
-
-
+        0xff,                             // bInterval
 
 
         // interface descriptor, USB spec 9.6.5, page 267-269, Table 9-12
@@ -304,7 +309,7 @@ uint8_t * USBCDCMSC::configurationDesc() {
         0x02,                   // bmAttributes (0x02=bulk)
         LSB(MAX_PACKET_SIZE_EPBULK),    // wMaxPacketSize (LSB)
         MSB(MAX_PACKET_SIZE_EPBULK),    // wMaxPacketSize (MSB)
-        0,                      // bInterval
+        1,                      // bInterval
 
         // endpoint descriptor, USB spec 9.6.6, page 269-271, Table 9-13
         7,                      // bLength
@@ -313,7 +318,7 @@ uint8_t * USBCDCMSC::configurationDesc() {
         0x02,                   // bmAttributes (0x02=bulk)
         LSB(MAX_PACKET_SIZE_EPBULK),    // wMaxPacketSize (LSB)
         MSB(MAX_PACKET_SIZE_EPBULK),     // wMaxPacketSize (MSB)
-        0,                       // bInterval
+        1,                       // bInterval
 
         // Interface 2, Alternate Setting 0, MSC Class
         9,      // bLength
@@ -333,7 +338,7 @@ uint8_t * USBCDCMSC::configurationDesc() {
         0x02,                       // bmAttributes (0x02=bulk)
         LSB(MAX_PACKET_SIZE_EPBULK),// wMaxPacketSize (LSB)
         MSB(MAX_PACKET_SIZE_EPBULK),// wMaxPacketSize (MSB)
-        0,                          // bInterval
+        1,                          // bInterval
 
         // endpoint descriptor, USB spec 9.6.6, page 269-271, Table 9-13
         7,                          // bLength
@@ -342,7 +347,7 @@ uint8_t * USBCDCMSC::configurationDesc() {
         0x02,                       // bmAttributes (0x02=bulk)
         LSB(MAX_PACKET_SIZE_EPBULK),// wMaxPacketSize (LSB)
         MSB(MAX_PACKET_SIZE_EPBULK),// wMaxPacketSize (MSB)
-        0                           // bInterval
+        1                           // bInterval
     };
     return configDescriptor;
 }
@@ -501,6 +506,7 @@ bool USBCDCMSC::EP5_IN_callback() {
     }
     return true;
 }
+
 
 
 void USBCDCMSC::memoryWrite (uint8_t * buf, uint16_t size) {
