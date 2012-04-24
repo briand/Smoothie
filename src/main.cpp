@@ -18,7 +18,7 @@
 #include "libs/utils.h"
 
 #include "libs/USBCDCMSC/USBCDCMSC.h"
-SDFileSystem sd(p5, p6, p7, p8, "sd");  // LPC17xx specific : comment if you are not using a SD card ( for example with a mBed ).
+SDFileSystem sd(P0_18, P0_17, P0_15, P0_16, "sd"); // (mosi, miso, sclk, cs) // LPC17xx specific : comment if you are not using a SD card ( for example with a mBed ).
 //LocalFileSystem local("local");       // LPC17xx specific : comment if you are not running a mBed
 USBCDCMSC cdcmsc(&sd);                  // LPC17xx specific : Composite serial + msc USB device
 
@@ -28,13 +28,15 @@ int main() {
 
     kernel->serial->printf("Smoothie ( grbl port ) version 0.6 \r\nstart\r\n");
 
-    kernel->add_module( new Laser(p21) );
-    kernel->add_module( new Extruder(p26,p27) );
-    kernel->add_module( new SimpleShell() );
-    kernel->add_module( new TemperatureControlPool() );
-    kernel->add_module( new PauseButton() );   
+ //   kernel->add_module( new Laser(p21) );
+ //   kernel->add_module( new Extruder(p26,p27) );
+    kernel->add_module( new SimpleShell() );	
+	kernel->add_module( new TemperatureControlPool() );
+	kernel->add_module( new PauseButton() );   
 
     kernel->add_module( &cdcmsc );
+	
+   // kernel->serial->printf("finished adding modules\r\n");
 
     while(1){
         kernel->call_event(ON_MAIN_LOOP);
