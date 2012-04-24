@@ -21,6 +21,6 @@ SRC=./src
 include ./gcc4mbed/build/gcc4mbed.mk
 
 flash: 
-	lpc21isp $(PROJECT).hex /dev/ttyACM0 115200 14746
+	lpc21isp $(PROJECT).hex /dev/tty.usbserial-FTE3KCI6 230400 12000
 
 
