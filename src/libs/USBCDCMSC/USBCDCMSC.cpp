@@ -21,7 +21,6 @@
 #include "USBBusInterface.h"
 #include "libs/SerialMessage.h"
 
-#include "libs/StreamOutput.h"
 #include "libs/RingBuffer.h"
 
 static uint8_t cdc_line_coding[7]= {0x80, 0x25, 0x00, 0x00, 0x00, 0x00, 0x08};
