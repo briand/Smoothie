@@ -28,6 +28,7 @@ void Stepper::on_module_loaded(){
     stepper = this;
     this->register_for_event(ON_BLOCK_BEGIN);
     this->register_for_event(ON_BLOCK_END);
+    this->register_for_event(ON_GCODE_EXECUTE);
     this->register_for_event(ON_PLAY);
     this->register_for_event(ON_PAUSE);
  
@@ -47,7 +48,7 @@ void Stepper::on_module_loaded(){
 // Get configuration from the config file
 void Stepper::on_config_reload(void* argument){
     
-    this->microseconds_per_step_pulse   =  this->kernel->config->value(microseconds_per_step_pulse_ckeckusm  )->by_default(5     )->as_number();
+    this->microseconds_per_step_pulse   =  this->kernel->config->value(microseconds_per_step_pulse_checksum  )->by_default(5     )->as_number();
     this->acceleration_ticks_per_second =  this->kernel->config->value(acceleration_ticks_per_second_checksum)->by_default(100   )->as_number();
     this->minimum_steps_per_minute      =  this->kernel->config->value(minimum_steps_per_minute_checksum     )->by_default(1200  )->as_number();
     this->base_stepping_frequency       =  this->kernel->config->value(base_stepping_frequency_checksum      )->by_default(100000)->as_number();
@@ -57,6 +58,16 @@ void Stepper::on_config_reload(void* argument){
     this->alpha_dir_pin                 =  this->kernel->config->value(alpha_dir_pin_checksum                )->by_default("1.18"     )->as_pin()->as_output();
     this->beta_dir_pin                  =  this->kernel->config->value(beta_dir_pin_checksum                 )->by_default("1.20"     )->as_pin()->as_output();
     this->gamma_dir_pin                 =  this->kernel->config->value(gamma_dir_pin_checksum                )->by_default("1.19"     )->as_pin()->as_output();
+    this->alpha_en_pin                  =  this->kernel->config->value(alpha_en_pin_checksum                 )->by_default("0.4"      )->as_pin()->as_output()->as_open_drain();
+    this->beta_en_pin                   =  this->kernel->config->value(beta_en_pin_checksum                  )->by_default("0.10"     )->as_pin()->as_output()->as_open_drain();
+    this->gamma_en_pin                  =  this->kernel->config->value(gamma_en_pin_checksum                 )->by_default("0.19"     )->as_pin()->as_output()->as_open_drain();
+
+
+    // TODO : This is supposed to be done by gcodes
+    this->alpha_en_pin->set(0);
+    this->beta_en_pin->set(0);
+    this->gamma_en_pin->set(0);
+
 
     // Set the Timer interval for Match Register 1, 
     this->kernel->step_ticker->set_reset_delay( this->microseconds_per_step_pulse / 1000000 );
@@ -72,6 +83,19 @@ void Stepper::on_pause(void* argument){
 void Stepper::on_play(void* argument){
     // TODO: Re-compute the whole queue for a cold-start
     this->paused = false;
+}
+
+void Stepper::on_gcode_execute(void* argument){
+    Gcode* gcode = static_cast<Gcode*>(argument);
+
+    if( gcode->has_letter('M')){
+        int code = (int) gcode->get_value('M');
+        if( code == 84 ){
+            this->alpha_en_pin->set(0);
+            this->beta_en_pin->set(0);
+            this->gamma_en_pin->set(0);
+        }
+    }
 }
 
 // A new block is popped from the queue

@@ -13,6 +13,7 @@ using namespace std;
 #include "libs/nuts_bolts.h"
 #include "libs/SlowTicker.h"
 #include "libs/Adc.h"
+#include "libs/Digipot.h"
 #include "libs/Pauser.h"
 
 #include "modules/communication/SerialConsole.h"
@@ -35,10 +36,11 @@ const ModuleCallback kernel_callback_functions[NUMBER_OF_DEFINED_EVENTS] = {
         &Module::on_block_end,
         &Module::on_config_reload,
         &Module::on_play,
-        &Module::on_pause
+        &Module::on_pause,
+        &Module::on_idle
 };
 
-#define baud_rate_setting_ckeckusm 10922
+#define baud_rate_setting_checksum 10922
 #define uart0_checksum             16877
 
 // The kernel is the central point in Smoothie : it stores modules, and handles event calls
@@ -47,7 +49,7 @@ Kernel::Kernel(){
     // Config first, because we need the baud_rate setting before we start serial 
     this->config         = new Config();
     // Serial second, because the other modules might want to say something
-    this->serial         = new SerialConsole(USBTX, USBRX, this->config->value(uart0_checksum,baud_rate_setting_ckeckusm)->by_default(9600)->as_number());
+    this->serial         = new SerialConsole(USBTX, USBRX, this->config->value(uart0_checksum,baud_rate_setting_checksum)->by_default(9600)->as_number());
 
     this->add_module( this->config );
     this->add_module( this->serial );
@@ -56,6 +58,7 @@ Kernel::Kernel(){
     this->slow_ticker          = new SlowTicker();
     this->step_ticker          = new StepTicker();
     this->adc                  = new Adc();
+    this->digipot              = new Digipot();
 
     // LPC17xx-specific 
     NVIC_SetPriority(TIMER0_IRQn, 1); 
