@@ -31,13 +31,13 @@ int main() {
  //   kernel->add_module( new Laser(p21) );
  //   kernel->add_module( new Extruder(p26,p27) );
     kernel->add_module( new SimpleShell() );	
-	kernel->add_module( new TemperatureControlPool() );
-	kernel->add_module( new PauseButton() );   
+//	kernel->add_module( new TemperatureControlPool() );
+//	kernel->add_module( new PauseButton() );   
 
     kernel->add_module( &cdcmsc );
 	
-   // kernel->serial->printf("finished adding modules\r\n");
-
+	kernel->serial->printf("finished adding modules\r\n");
+	
     while(1){
         kernel->call_event(ON_MAIN_LOOP);
     }

@@ -87,6 +87,7 @@ void Kernel::call_event(unsigned int id_event){
 }
 
 void Kernel::call_event(unsigned int id_event, void * argument){
+	this->serial->printf("kernel got arg event %d\r\n", id_event);
     for(unsigned int i=0; i < this->hooks[id_event].size(); i++){
         (this->hooks[id_event][i]->*kernel_callback_functions[id_event])(argument);
     }

@@ -24,6 +24,8 @@ void SimpleShell::on_module_loaded(){
 // When a new line is received, check if it is a command, and if it is, act upon it
 void SimpleShell::on_console_line_received( void* argument ){
     SerialMessage new_message = *static_cast<SerialMessage*>(argument);
+//	new_message.stream->printf("shell got a line: %s\r\n", new_message.message.c_str());
+	this->kernel->serial->printf("shell got a line: %s\r\n", new_message.message.c_str());
     string possible_command = new_message.message;
 
     // We don't compare to a string but to a checksum of that string, this saves some space in flash memory
