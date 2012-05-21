@@ -37,11 +37,8 @@ void SerialConsole::on_module_loaded() {
 void SerialConsole::on_serial_char_received(){
     if(this->serial->readable()){
         char received = this->serial->getc();
-        // convert carriage return to newline (in case the system only sends CR with no NL)
-        if( received == '\r'){ 
-			 this->buffer.push_back('\n');
-			 return;
-		}
+        //On newline, we have received a line, else concatenate in buffer
+        if( received == '\r' ){ return; }
         this->buffer.push_back(received); 
     }
 }
