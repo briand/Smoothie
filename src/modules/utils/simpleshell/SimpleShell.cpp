@@ -27,7 +27,7 @@ void SimpleShell::on_module_loaded(){
 void SimpleShell::on_console_line_received( void* argument ){
     SerialMessage new_message = *static_cast<SerialMessage*>(argument);
 //	new_message.stream->printf("shell got a line: %s\r\n", new_message.message.c_str());
-	this->kernel->serial->printf("shell got a line: %s\r\n", new_message.message.c_str());
+//	this->kernel->serial->printf("shell got a line: %s\r\n", new_message.message.c_str());
     string possible_command = new_message.message;
 
     // We don't compare to a string but to a checksum of that string, this saves some space in flash memory
@@ -88,6 +88,10 @@ void SimpleShell::cat_command( string parameters, StreamOutput* stream ){
    
     // Open file 
     FILE *lp = fopen(filename.c_str(), "r");
+    if(lp == NULL) {
+    	stream->printf("File not found: %s\r\n", filename.c_str());
+    	return;
+    }
     string buffer;
     int c;
     int newlines = 0; 
@@ -105,7 +109,13 @@ void SimpleShell::cat_command( string parameters, StreamOutput* stream ){
 // Play a gcode file by considering each line as if it was received on the serial console
 void SimpleShell::play_command( string parameters, StreamOutput* stream ){
     // Get filename
-    this->current_file_handler = fopen( this->absolute_from_relative(shift_parameter( parameters )).c_str(), "r");
+    string filename          = this->absolute_from_relative(shift_parameter( parameters ));
+    this->current_file_handler = fopen( filename.c_str(), "r");
+    if(this->current_file_handler == NULL)
+    {
+    	stream->printf("File not found: %s\r\n", filename.c_str());
+    	return;
+    }
     this->playing_file = true;
     this->current_stream = stream;
 }
