@@ -61,6 +61,9 @@ void Stepper::on_config_reload(void* argument){
     this->alpha_en_pin                  =  this->kernel->config->value(alpha_en_pin_checksum                 )->by_default("0.4"      )->as_pin()->as_output()->as_open_drain();
     this->beta_en_pin                   =  this->kernel->config->value(beta_en_pin_checksum                  )->by_default("0.10"     )->as_pin()->as_output()->as_open_drain();
     this->gamma_en_pin                  =  this->kernel->config->value(gamma_en_pin_checksum                 )->by_default("0.19"     )->as_pin()->as_output()->as_open_drain();
+    this->alpha_en_pin_use              =  this->kernel->config->value(alpha_en_pin_use_checksum             )->by_default(false      )->as_bool();
+    this->beta_en_pin_use               =  this->kernel->config->value(beta_en_pin_use_checksum              )->by_default(false      )->as_bool();
+    this->gamma_en_pin_use              =  this->kernel->config->value(gamma_en_pin_use_checksum             )->by_default(false      )->as_bool();
 
 
     // TODO : This is supposed to be done by gcodes

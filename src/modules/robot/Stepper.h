@@ -25,6 +25,9 @@
 #define alpha_en_pin_checksum                       35042  
 #define beta_en_pin_checksum                        34680 
 #define gamma_en_pin_checksum                       26335 
+#define alpha_en_pin_use_checksum					16016
+#define beta_en_pin_use_checksum					37670
+#define gamma_en_pin_use_checksum					4237
 
 
 class Stepper : public Module {
@@ -72,6 +75,9 @@ class Stepper : public Module {
         Pin* alpha_en_pin;
         Pin* beta_en_pin;
         Pin* gamma_en_pin;
+        bool alpha_en_pin_use;
+        bool beta_en_pin_use;
+        bool gamma_en_pin_use;
         unsigned short step_bits[3];
         int counter_increment;
         bool paused;
